@@ -5,6 +5,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.CombineTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
@@ -13,11 +14,7 @@ import java.io.IOException;
 public class WordcountDriver {
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 
-        System.out.println("---");
-        System.out.println(args[0]);
-        System.out.println(args[1]);
-        System.out.println("===");
-
+        args = new String[]{"/Users/younglue/workspace-hadoop/input/learning.txt", "/Users/younglue/workspace-hadoop/output"};
 
         Configuration conf = new Configuration();
         // 1 获取job对象
@@ -37,6 +34,11 @@ public class WordcountDriver {
         // 5 设置最终数据输出的key和value类型
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
+
+        // 如果不设置InputFormat，那么使用默认的，默认为TextInputFormat
+        //job.setInputFormatClass(CombineTextInputFormat.class);
+        // 虚拟存储切片最大值设置：20m
+        //CombineTextInputFormat.setMaxInputSplitSize(job, 20971520);
 
         // 6 设置输入路径和输出路径
         // hadoop jar ... in out
