@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class FlowCountDriver {
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
-        args = new String[]{"/Users/younglue/workspace-hadoop/input/phone_data.txt", "/Users/younglue/workspace-hadoop/output"};
+        args = new String[]{"/Users/younglue/workspace-hadoop/input/phone_data.txt", "/Users/younglue/workspace-hadoop/output-flow"};
         Configuration conf = new Configuration();
         // 1 获取Job对象
         Job job = Job.getInstance(conf);
@@ -26,6 +26,10 @@ public class FlowCountDriver {
         // 5 设置最终输出的kv类型
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(FlowBean.class);
+
+        //job.setPartitionerClass(ProvincePartitioner.class);
+        //job.setNumReduceTasks(5);
+
         // 6 设置输入输出的路径
         FileInputFormat.setInputPaths(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
