@@ -14,7 +14,7 @@ import java.io.IOException;
 public class WordcountDriver {
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 
-        args = new String[]{"/Users/younglue/workspace-hadoop/input/hello.txt", "/Users/younglue/workspace-hadoop/output"};
+        args = new String[]{"/Users/younglue/workspace-hadoop/input/hello_v2.txt", "/Users/younglue/workspace-hadoop/output"};
 
         Configuration conf = new Configuration();
         // 1 获取job对象
@@ -35,7 +35,8 @@ public class WordcountDriver {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
-        job.setNumReduceTasks(2);
+        //job.setNumReduceTasks(2);
+        job.setCombinerClass(WordcountReducer.class);
 
         // 如果不设置InputFormat，那么使用默认的，默认为TextInputFormat
         //job.setInputFormatClass(CombineTextInputFormat.class);

@@ -19,7 +19,7 @@ public class FlowCountSortMapper extends Mapper<LongWritable, Text, FlowBean, Te
         // 3 封装
         String phoneNum = fields[0];
         long upFlow = Long.parseLong(fields[1]);
-        long downFlow = Long.parseLong(fields[3]);
+        long downFlow = Long.parseLong(fields[2]);
         long sumFlow = Long.parseLong(fields[3]);
         k.setUpFlow(upFlow);
         k.setDownFlow(downFlow);
