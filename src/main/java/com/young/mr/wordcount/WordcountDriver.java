@@ -4,6 +4,9 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.compress.BZip2Codec;
+import org.apache.hadoop.io.compress.CompressionCodec;
+import org.apache.hadoop.io.compress.GzipCodec;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.CombineTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -17,6 +20,11 @@ public class WordcountDriver {
         args = new String[]{"/Users/younglue/workspace-hadoop/input/hello_v2.txt", "/Users/younglue/workspace-hadoop/output"};
 
         Configuration conf = new Configuration();
+        // 开启map端输出压缩
+        conf.setBoolean("mapreduce.map.output.compress", true);
+        // 设置map端输出压缩方式
+        conf.setClass("mapreduce.map.output.compress.codec", BZip2Codec.class, CompressionCodec.class);
+
         // 1 获取job对象
         Job job = Job.getInstance(conf);
 
@@ -36,7 +44,7 @@ public class WordcountDriver {
         job.setOutputValueClass(IntWritable.class);
 
         //job.setNumReduceTasks(2);
-        job.setCombinerClass(WordcountReducer.class);
+        //job.setCombinerClass(WordcountReducer.class);
 
         // 如果不设置InputFormat，那么使用默认的，默认为TextInputFormat
         //job.setInputFormatClass(CombineTextInputFormat.class);
@@ -47,6 +55,11 @@ public class WordcountDriver {
         // hadoop jar ... in out
         FileInputFormat.setInputPaths(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        // 设置reduce端输出压缩开启
+        FileOutputFormat.setCompressOutput(job, true);
+        // 设置压缩方式
+        FileOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
 
         // 7 提交job
         boolean res = job.waitForCompletion(true);
